@@ -120,6 +120,11 @@ export class ProductsService {
     return productDocs;
   }
 
+  public async clearCollection() {
+    await this.solarPanelProduct.deleteMany();
+    return 'Deleted all the products';
+  }
+
   public async getSolarProducts() {
     const productDocs = await this.solarPanelProduct.find({});
     return productDocs;

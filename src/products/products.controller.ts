@@ -9,6 +9,11 @@ export class ProductsController {
     return this.productsService.searchProducts();
   }
 
+  @Get('clear')
+  clearProducts() {
+    return this.productsService.clearCollection();
+  }
+
   @Get('/')
   getProducts() {
     return this.productsService.getSolarProducts();
