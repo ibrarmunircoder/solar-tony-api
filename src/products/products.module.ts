@@ -6,12 +6,14 @@ import {
   SolarPanelProductSchema,
 } from './schemas/solar-panel.schema';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: SolarPanelProduct.name, schema: SolarPanelProductSchema },
     ]),
+    ScheduleModule.forRoot(),
   ],
   controllers: [ProductsController],
   providers: [ProductsService],

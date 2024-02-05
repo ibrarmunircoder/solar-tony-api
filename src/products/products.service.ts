@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { applicationConfig } from 'src/config/app.config';
@@ -82,10 +87,19 @@ export class ProductsService {
       NumberOfItems:
         item.ItemInfo.ProductInfo?.UnitCount?.DisplayValue ?? 'N/A',
       Title: item.ItemInfo.Title.DisplayValue,
-      Availability: item.Offers.Listings[0]?.Availability.Type,
-      Condition: item.Offers.Listings[0]?.Condition.Value,
-      Price: item.Offers.Listings[0]?.Price.Amount,
-      PriceWithCurrency: item.Offers.Listings[0]?.Price.DisplayAmount,
+      Availability: item.Offers?.Listings[0]?.Availability.Type ?? 'N/A',
+      Condition:
+        item.Offers?.Listings[0]?.Condition.Value ||
+        item.Offers?.Summaries[0]?.HighestPrice?.DisplayAmount ||
+        'N/A',
+      Price:
+        item.Offers?.Listings[0]?.Price.Amount ||
+        item.Offers?.Summaries[0]?.HighestPrice?.Amount ||
+        'N/A',
+      PriceWithCurrency:
+        item.Offers?.Listings[0]?.Price.DisplayAmount ||
+        item.Offers?.Summaries[0]?.HighestPrice?.DisplayAmount ||
+        'N/A',
       Locale: 'en_US',
     }));
   }
@@ -128,5 +142,16 @@ export class ProductsService {
   public async getSolarProducts() {
     const productDocs = await this.solarPanelProduct.find({});
     return productDocs;
+  }
+
+  public async updateAmazondSolarProducts() {
+    try {
+      Logger.log('Started the job');
+      await this.clearCollection();
+      await this.searchProducts();
+      Logger.log('completed the job');
+    } catch (error) {
+      Logger.error(error);
+    }
   }
 }
