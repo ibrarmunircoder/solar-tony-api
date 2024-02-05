@@ -20,8 +20,8 @@ export class ProductsController {
     return this.productsService.getSolarProducts();
   }
 
-  @Cron('0 */2 * * *')
-  async updateAmazondSolarProducts() {
-    await this.productsService.updateAmazondSolarProducts();
-  }
+  // @Cron('0 */2 * * *')
+  // async updateAmazondSolarProducts() {
+  //   await this.productsService.updateAmazondSolarProducts();
+  // }
 }
